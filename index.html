@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Meu Controle - Sistema de Controle Financeiro Pessoal moderno, intuitivo e completo.">
+  <meta name="theme-color" content="#10b981">
+  <title>Meu Controle – Finanças Pessoais</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Estilos CSS Modulares -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/views.css">
+</head>
+<body>
+
+  <!-- ====================================================================
+       TELA DE AUTENTICAÇÃO (Login, Cadastro, Recuperação e Redefinição de Senha)
+       Protege todas as páginas internas enquanto não houver sessão válida
+       ==================================================================== -->
+  <div id="auth-screen-container" class="auth-screen-container"></div>
+
+  <!-- Contêiner Principal Protegido (Oculto até validação da sessão Supabase Auth) -->
+  <div class="app-container" id="protected-app-container" style="display: none;">
+    <!-- Overlay para fechar sidebar no mobile -->
+    <div class="sidebar-overlay"></div>
+
+    <!-- ====================================================================
+         SIDEBAR (Menu Lateral)
+         ==================================================================== -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="#dashboard" class="brand-link" title="Voltar para Visão Geral">
+          <div class="brand-logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"></path>
+              <path d="M4 6v12a2 2 0 0 0 2 2h14v-4"></path>
+              <path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"></path>
+            </svg>
+          </div>
+          <div class="brand-info">
+            <span class="brand-name">Meu Controle</span>
+            <span class="brand-subtitle">Finanças Pessoais</span>
+          </div>
+        </a>
+        <button type="button" class="sidebar-close-btn" aria-label="Fechar menu">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+      </div>
+
+      <!-- Navegação Lateral -->
+      <nav class="sidebar-nav">
+        <span class="nav-section-title">Navegação Principal</span>
+
+        <a href="#dashboard" class="nav-item active" data-view="dashboard" id="nav-dashboard">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+          </span>
+          <span>Visão geral</span>
+        </a>
+
+        <a href="#transactions" class="nav-item" data-view="transactions" id="nav-transactions">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"></polyline><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><polyline points="7 23 3 19 7 15"></polyline><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+          </span>
+          <span>Transações</span>
+          <span class="nav-badge" id="nav-badge-transactions">0</span>
+        </a>
+
+        <a href="#reports" class="nav-item" data-view="reports" id="nav-reports">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+          </span>
+          <span>Relatórios</span>
+        </a>
+
+        <a href="#categories" class="nav-item" data-view="categories" id="nav-categories">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          </span>
+          <span>Categorias</span>
+          <span class="nav-badge" id="nav-badge-categories">0</span>
+        </a>
+
+        <a href="#caixinhas" class="nav-item" data-view="caixinhas" id="nav-caixinhas">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 5c-1.5 0-2.8 1.4-3 2-3.5-1.5-11-.3-11 5 0 1.8 0 3 2 4.5V20h4v-2h3v2h4v-4c1-.5 1.7-1 2-2h2v-4h-2c0-1-.5-1.5-1-2V5z"></path><circle cx="7" cy="11" r="1"></circle></svg>
+          </span>
+          <span>Caixinhas</span>
+          <span class="nav-badge" id="nav-badge-caixinhas">0</span>
+        </a>
+
+        <a href="#investments" class="nav-item" data-view="investments" id="nav-investments">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+          </span>
+          <span>Investimentos</span>
+          <span class="nav-badge" id="nav-badge-investments">0</span>
+        </a>
+
+        <a href="#intelligence" class="nav-item" data-view="intelligence" data-fi-mode="overview" id="nav-intelligence">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"></path><path d="M5 3v4"></path><path d="M3 5h4"></path><path d="M19 17v4"></path><path d="M17 19h4"></path></svg>
+          </span>
+          <span>Inteligência Financeira</span>
+        </a>
+
+        <a href="#assistant" class="nav-item" data-view="assistant" data-fi-mode="assistant" id="nav-assistant">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M12 7v4"></path><path d="M10 9h4"></path></svg>
+          </span>
+          <span>Assistente IA</span>
+        </a>
+
+        <span class="nav-section-title">Preferências</span>
+
+        <a href="#settings" class="nav-item" data-view="settings" id="nav-settings">
+          <span class="nav-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+          </span>
+          <span>Configurações</span>
+        </a>
+      </nav>
+
+      <!-- Mini Perfil e Logout no Rodapé da Sidebar -->
+      <div class="sidebar-footer">
+        <div class="sidebar-user-card">
+          <div class="user-avatar" id="sidebar-user-avatar">MC</div>
+          <div class="user-meta" style="min-width: 0; flex: 1;">
+            <span class="user-name" id="sidebar-user-name" style="display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Carregando...</span>
+            <span class="user-email" id="sidebar-user-email" style="display: block; font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
+            <span class="user-status" id="sidebar-sync-status">
+              <span class="status-dot" id="sidebar-status-dot"></span> <span id="sidebar-status-text">Supabase Cloud</span>
+            </span>
+          </div>
+          <button type="button" class="sidebar-logout-btn" id="btn-sidebar-logout" title="Sair da conta (Logout)" aria-label="Sair da conta">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         CORPO PRINCIPAL (Header + Views)
+         ==================================================================== -->
+    <div class="app-wrapper">
+      <!-- Cabeçalho Fixo -->
+      <header class="app-header">
+        <div class="header-left">
+          <button type="button" class="hamburger-btn" aria-label="Abrir menu de navegação">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          <div class="header-title-container">
+            <h1 class="header-page-title" id="header-page-title">Visão Geral</h1>
+            <span class="header-breadcrumb" id="header-breadcrumb">Início / Visão Geral</span>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Botão Ocultar/Mostrar Valores (Privacidade) -->
+          <button type="button" class="header-icon-btn" id="header-btn-toggle-privacy" title="Ocultar valores monetários">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+
+          <!-- Botão Modo Escuro / Claro -->
+          <button type="button" class="header-icon-btn" id="header-btn-toggle-theme" title="Alternar tema claro/escuro">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          </button>
+
+          <!-- Botão Ação Rápida: Nova Movimentação -->
+          <button type="button" class="header-btn-quick-add" id="header-btn-quick-add">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>Nova Movimentação</span>
+          </button>
+
+          <!-- Botão Sair da Conta (Logout) -->
+          <button type="button" class="header-icon-btn" id="header-btn-logout" title="Sair da conta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Conteúdo Dinâmico das 5 Telas -->
+      <main class="app-main">
+        <!-- 1. Visão Geral (Dashboard) -->
+        <section id="view-dashboard" class="view-section active"></section>
+
+        <!-- 2. Transações -->
+        <section id="view-transactions" class="view-section"></section>
+
+        <!-- 3. Relatórios -->
+        <section id="view-reports" class="view-section"></section>
+
+        <!-- 4. Categorias -->
+        <section id="view-categories" class="view-section"></section>
+
+        <!-- 5. Caixinhas & Metas -->
+        <section id="view-caixinhas" class="view-section"></section>
+
+        <!-- 6. Investimentos -->
+        <section id="view-investments" class="view-section"></section>
+
+        <!-- 7. Inteligência Financeira -->
+        <section id="view-intelligence" class="view-section"></section>
+
+        <!-- 8. Configurações -->
+        <section id="view-settings" class="view-section"></section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Contêineres de Modal e Notificações Toast -->
+  <div id="modal-backdrop" class="modal-backdrop"></div>
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- SDK Oficial do Supabase v2 (Auth + Database PostgreSQL com RLS) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Biblioteca Oficial SheetJS para geração de planilhas Excel (.xlsx) -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- Configuração Pública do Supabase -->
+  <script src="js/supabase-config.js"></script>
+  <!-- Script Principal Consolidado -->
+  <script src="js/bundle.js"></script>
+</body>
+</html>
